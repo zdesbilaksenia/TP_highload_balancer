@@ -12,7 +12,7 @@ func main() {
 	router := echo.New()
 	router.GET("/",
 		func(ctx echo.Context) error {
-			i := time.Duration(rand.Intn(20))
+			i := time.Duration(rand.Intn(1000))
 			time.Sleep(i * time.Millisecond)
 			return ctx.String(http.StatusOK, "server is working")
 		},
