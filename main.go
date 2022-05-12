@@ -11,32 +11,16 @@ import (
 )
 
 func main() {
-	hitsTotal := prometheus.NewCounter(prometheus.CounterOpts{
-		Name: "hits_total",
-	})
-	reqDur := prometheus.NewHistogramVec(
+	reqDur := prometheus.NewHistogram(
 		prometheus.HistogramOpts{
 			Subsystem: "",
 			Name:      "request_duration_seconds",
 			Help:      "request latencies",
 			Buckets:   []float64{.005, .01, .02, 0.04, .06, 0.08, .1, 0.15, .25, 0.4, .6, .8, 1, 1.5, 2, 3, 5},
 		},
-		[]string{"code"},
 	)
 
-	if err := prometheus.Register(reqDur); err != nil {
-		log.Fatal(err)
-	}
-	if err := prometheus.Register(hitsTotal); err != nil {
-		log.Fatal(err)
-	}
-	if err := prometheus.Register(prometheus.NewBuildInfoCollector()); err != nil {
-		log.Fatal(err)
-	}
-	//go func() {
-	//	metricsRouter := echo.New()
-	//	log.Fatal(metricsRouter.Start(":5050"))
-	//}()
+	prometheus.MustRegister(reqDur)
 
 	router := echo.New()
 	router.GET("/",
